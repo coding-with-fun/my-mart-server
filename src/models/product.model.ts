@@ -22,6 +22,13 @@ export default class Product {
     })
     price: number;
 
+    @Column({
+        name: 'price',
+        type: 'integer',
+        select: false,
+    })
+    count: number;
+
     @ManyToOne(() => Brand, (brand) => brand.products)
     brand: Brand;
 }
