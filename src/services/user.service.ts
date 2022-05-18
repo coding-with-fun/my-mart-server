@@ -8,6 +8,7 @@ import {
     getUserDetailsByIdRequestType,
 } from 'src/types/requests/user.request';
 import { Repository } from 'typeorm';
+import { encryptPassword } from './encryptDecryptPassword.service';
 import { pagination } from './pagination.service';
 
 @Injectable()
@@ -56,13 +57,12 @@ export class UserService {
             newUser.firstName = body.firstName;
             newUser.lastName = body.lastName;
             newUser.email = body.email;
-            newUser.password = body.password;
+            newUser.password = await encryptPassword(body.password);
             newUser.contactNumber = body.contactNumber;
             newUser.address = body.address;
             newUser.isAdmin = false;
 
             await this.userRepository.save(newUser);
-
             delete newUser.password;
 
             return {

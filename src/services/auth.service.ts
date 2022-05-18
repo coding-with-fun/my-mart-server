@@ -7,6 +7,7 @@ import {
     validateCredentialsRequestType,
 } from 'src/types/requests/auth.request';
 import { Repository } from 'typeorm';
+import { matchPassword } from './encryptDecryptPassword.service';
 
 @Injectable()
 export class AuthService {
@@ -25,8 +26,14 @@ export class AuthService {
                 },
                 select: ['id', 'email', 'password'],
             });
+            const doesPasswordMatch = await matchPassword(
+                params.password,
+                user.password,
+            );
 
-            if (user && params.password === user.password) {
+            console.log(user, doesPasswordMatch);
+
+            if (user && doesPasswordMatch) {
                 const { password, ...result } = user;
                 return result;
             }
