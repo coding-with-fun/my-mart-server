@@ -2,7 +2,6 @@ import {
     Body,
     Controller,
     Get,
-    Param,
     Post,
     Query,
     Request,
@@ -30,12 +29,9 @@ export class UserController {
     getUserInfo(
         @Request()
         req: {
-            user: {
-                id: string;
-            };
+            user: getUserDetailsByIdRequestType;
         },
-    ) {
-        // const params = { id: req.user.id };
+    ): Promise<getUserDetailsByIdResponseType> {
         return this.userService.getUserDetailsById(req.user);
     }
 
@@ -51,12 +47,5 @@ export class UserController {
         @Body() body: createUserBodyType,
     ): Promise<createUserResponseType> {
         return this.userService.createUser(body);
-    }
-
-    @Get(':id')
-    getUserDetailsById(
-        @Param() params: getUserDetailsByIdRequestType,
-    ): Promise<getUserDetailsByIdResponseType> {
-        return this.userService.getUserDetailsById(params);
     }
 }

@@ -41,6 +41,7 @@ export default class User {
         name: 'password',
         type: 'varchar',
         length: 20,
+        select: false,
     })
     password: string;
 

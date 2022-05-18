@@ -1,8 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import User from 'src/models/user.model';
-import { validateCredentialsRequestType } from 'src/types/requests/auth.request';
+import {
+    loginWithCredentialsRequestType,
+    validateCredentialsRequestType,
+} from 'src/types/requests/auth.request';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -15,27 +18,55 @@ export class AuthService {
     ) {}
 
     async validateCredentials(params: validateCredentialsRequestType) {
-        const user = await this.userRepository.findOne({
-            where: {
-                email: params.email,
-            },
-        });
+        try {
+            const user = await this.userRepository.findOne({
+                where: {
+                    email: params.email,
+                },
+                select: ['id', 'email', 'password'],
+            });
 
-        if (user && params.password === user.password) {
-            const { password, ...result } = user;
-            return result;
+            if (user && params.password === user.password) {
+                const { password, ...result } = user;
+                return result;
+            }
+
+            return null;
+        } catch (error) {
+            throw new HttpException(
+                {
+                    statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+                    message: ['Internal server error.'],
+                    error: true,
+                },
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
         }
-
-        return null;
     }
 
-    async loginWithCredentials(user: any) {
-        const payload = {
-            id: user.id,
-        };
+    async loginWithCredentials(user: loginWithCredentialsRequestType) {
+        try {
+            const payload = {
+                id: user.id,
+            };
 
-        return {
-            access_token: this.jwtTokenService.sign(payload),
-        };
+            return {
+                statusCode: 200,
+                data: {
+                    access_token: this.jwtTokenService.sign(payload),
+                },
+                message: ['User logged in successfully.'],
+                error: false,
+            };
+        } catch (error) {
+            throw new HttpException(
+                {
+                    statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+                    message: ['Internal server error.'],
+                    error: true,
+                },
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
     }
 }

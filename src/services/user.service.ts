@@ -63,6 +63,8 @@ export class UserService {
 
             await this.userRepository.save(newUser);
 
+            delete newUser.password;
+
             return {
                 statusCode: 200,
                 data: newUser,
@@ -112,6 +114,8 @@ export class UserService {
                     id: userId,
                 },
             });
+
+            delete userDetails.password;
 
             return {
                 statusCode: 200,
