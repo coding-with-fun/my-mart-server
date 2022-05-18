@@ -5,7 +5,7 @@ import User from 'src/models/user.model';
 import {
     createUserBodyType,
     getAllUsersQueryType,
-    getUserDetailsByIdRequestType,
+    getUserIdRequestType,
 } from 'src/types/requests/user.request';
 import { Repository } from 'typeorm';
 import { encryptPassword } from './encryptDecryptPassword.service';
@@ -30,6 +30,9 @@ export class UserService {
                 skip: (page - 1) * limit,
                 order: {
                     [orderField]: orderBy,
+                },
+                relations: {
+                    cart: true,
                 },
             });
 
@@ -61,6 +64,7 @@ export class UserService {
             newUser.contactNumber = body.contactNumber;
             newUser.address = body.address;
             newUser.isAdmin = false;
+            newUser.cart = [];
 
             await this.userRepository.save(newUser);
             delete newUser.password;
@@ -105,13 +109,16 @@ export class UserService {
         }
     }
 
-    async getUserDetailsById(params: getUserDetailsByIdRequestType) {
+    async getUserDetailsById(params: getUserIdRequestType) {
         try {
             const userId = parseInt(params.id);
 
             const userDetails = await this.userRepository.findOne({
                 where: {
                     id: userId,
+                },
+                relations: {
+                    cart: true,
                 },
             });
 

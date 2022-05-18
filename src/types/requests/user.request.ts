@@ -77,7 +77,7 @@ export class createUserBodyType {
     address: string;
 }
 
-export class getUserDetailsByIdRequestType {
+export class getUserIdRequestType {
     @IsNotEmpty({
         message: 'User ID is required.',
     })

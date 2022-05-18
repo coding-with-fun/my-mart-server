@@ -12,7 +12,7 @@ import { UserService } from 'src/services/user.service';
 import {
     createUserBodyType,
     getAllUsersQueryType,
-    getUserDetailsByIdRequestType,
+    getUserIdRequestType,
 } from 'src/types/requests/user.request';
 import {
     createUserResponseType,
@@ -29,7 +29,7 @@ export class UserController {
     getUserInfo(
         @Request()
         req: {
-            user: getUserDetailsByIdRequestType;
+            user: getUserIdRequestType;
         },
     ): Promise<getUserDetailsByIdResponseType> {
         return this.userService.getUserDetailsById(req.user);

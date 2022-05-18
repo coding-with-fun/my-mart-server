@@ -31,8 +31,6 @@ export class AuthService {
                 user.password,
             );
 
-            console.log(user, doesPasswordMatch);
-
             if (user && doesPasswordMatch) {
                 const { password, ...result } = user;
                 return result;
