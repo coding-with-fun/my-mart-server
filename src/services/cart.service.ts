@@ -40,10 +40,6 @@ export class CartService {
                             id: productId,
                         },
                     },
-                    relations: {
-                        product: true,
-                        user: true,
-                    },
                 });
 
                 if (!cartItem) {
@@ -68,14 +64,10 @@ export class CartService {
                         error: false,
                     };
                 } else {
-                    cartItem.count += 1;
-                    await this.cartRepository.save(cartItem);
-
                     return {
-                        statusCode: 200,
-                        data: cartItem,
-                        message: ['Product updated in the cart.'],
-                        error: false,
+                        statusCode: 406,
+                        message: ['Product already added to the cart.'],
+                        error: true,
                     };
                 }
             } else {
@@ -95,5 +87,74 @@ export class CartService {
                 HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
+    }
+
+    async removeProductFromCart(params: any) {
+        try {
+            const cartId = parseInt(params.cartId);
+
+            const cart = await this.cartRepository.findOne({
+                where: {
+                    id: cartId,
+                },
+            });
+            await this.cartRepository.remove(cart);
+
+            return {
+                statusCode: 200,
+                message: ['Product removed from the cart.'],
+                error: false,
+            };
+        } catch (error) {
+            throw new HttpException(
+                {
+                    statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+                    message: ['Internal server error.'],
+                    error: true,
+                },
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
+    }
+
+    async changeProductCountInCart(params: any) {
+        try {
+            const cartId = parseInt(params.cartId);
+            const itemCount = parseInt(params.itemCount);
+
+            if (!itemCount) {
+                return this.removeProductFromCart({
+                    cartId,
+                });
+            } else {
+                const cartItem = await this.cartRepository.findOne({
+                    where: {
+                        id: cartId,
+                    },
+                    relations: {
+                        product: true,
+                        user: true,
+                    },
+                });
+
+                if (cartItem) {
+                    cartItem.count = itemCount;
+                    await this.cartRepository.save(cartItem);
+
+                    return {
+                        statusCode: 200,
+                        data: cartItem,
+                        message: ['Product does not exist in the cart.'],
+                        error: true,
+                    };
+                } else {
+                    return {
+                        statusCode: 406,
+                        message: ['Product does not exist in the cart.'],
+                        error: true,
+                    };
+                }
+            }
+        } catch (error) {}
     }
 }
