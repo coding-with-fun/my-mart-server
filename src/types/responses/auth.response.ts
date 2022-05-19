@@ -1,5 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
-import Product from 'src/models/product.model';
+import Cart from 'src/models/cart.model';
 
 export class validateCredentialsResponseType {
     id: number;
@@ -9,5 +8,5 @@ export class validateCredentialsResponseType {
     contactNumber: number;
     isAdmin: boolean;
     address: string;
-    cart: Product[];
+    cart: Cart[];
 }

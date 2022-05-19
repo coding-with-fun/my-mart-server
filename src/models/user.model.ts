@@ -1,11 +1,5 @@
-import {
-    Column,
-    Entity,
-    JoinTable,
-    ManyToMany,
-    PrimaryGeneratedColumn,
-} from 'typeorm';
-import Product from './product.model';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import Cart from './cart.model';
 
 @Entity('user')
 export default class User {
@@ -66,7 +60,6 @@ export default class User {
     })
     address: string;
 
-    @ManyToMany(() => Product)
-    @JoinTable()
-    cart: Product[];
+    @OneToMany(() => Cart, (cart) => cart.user)
+    cart: Cart[];
 }

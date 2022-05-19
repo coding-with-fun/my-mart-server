@@ -67,14 +67,11 @@ export class ProductService {
                 },
             });
             if (!brand) {
-                throw new HttpException(
-                    {
-                        statusCode: HttpStatus.NOT_ACCEPTABLE,
-                        message: ['Brand does not exist.'],
-                        error: true,
-                    },
-                    HttpStatus.NOT_ACCEPTABLE,
-                );
+                return {
+                    statusCode: 406,
+                    message: ['Brand does not exist.'],
+                    error: true,
+                };
             } else {
                 const newProduct = new Product();
                 newProduct.brand = brand;

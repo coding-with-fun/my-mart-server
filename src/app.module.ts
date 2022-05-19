@@ -16,6 +16,7 @@ import IndexModule from './modules/index.module';
             synchronize: true,
             autoLoadEntities: true,
             logging: true,
+            logger: 'advanced-console',
         }),
         IndexModule,
     ],

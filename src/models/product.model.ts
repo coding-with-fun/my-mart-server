@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import Brand from './brand.model';
 
-@Entity()
+@Entity('product')
 export default class Product {
     @PrimaryGeneratedColumn('increment', {
         type: 'integer',

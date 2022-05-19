@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import _ from 'lodash';
+import Cart from 'src/models/cart.model';
 import Product from 'src/models/product.model';
 import User from 'src/models/user.model';
 import { addProductToCartRequestType } from 'src/types/requests/cart.request';
@@ -14,30 +14,86 @@ export class CartService {
 
         @InjectRepository(Product)
         private productRepository: Repository<Product>,
+
+        @InjectRepository(Cart)
+        private cartRepository: Repository<Cart>,
     ) {}
 
     async addProductToCart(params: addProductToCartRequestType) {
-        const userId = parseInt(params.userId);
-        const productId = parseInt(params.productId);
+        try {
+            const userId = parseInt(params.userId);
+            const productId = parseInt(params.productId);
 
-        const product = await this.productRepository.findOne({
-            where: {
-                id: productId,
-            },
-        });
-
-        if (product) {
-            const user = await this.userRepository.findOne({
+            const product = await this.productRepository.findOne({
                 where: {
-                    id: userId,
-                },
-                relations: {
-                    cart: true,
+                    id: productId,
                 },
             });
-            user.cart.push(product);
 
-            return await this.userRepository.save(user);
+            if (product) {
+                const cartItem = await this.cartRepository.findOne({
+                    where: {
+                        user: {
+                            id: userId,
+                        },
+                        product: {
+                            id: productId,
+                        },
+                    },
+                    relations: {
+                        product: true,
+                        user: true,
+                    },
+                });
+
+                if (!cartItem) {
+                    const user = await this.userRepository.findOne({
+                        where: {
+                            id: userId,
+                        },
+                    });
+
+                    const newCartItem = new Cart();
+
+                    newCartItem.count = 1;
+                    newCartItem.product = product;
+                    newCartItem.user = user;
+
+                    await this.cartRepository.save(newCartItem);
+
+                    return {
+                        statusCode: 200,
+                        data: newCartItem,
+                        message: ['Product added to the cart.'],
+                        error: false,
+                    };
+                } else {
+                    cartItem.count += 1;
+                    await this.cartRepository.save(cartItem);
+
+                    return {
+                        statusCode: 200,
+                        data: cartItem,
+                        message: ['Product updated in the cart.'],
+                        error: false,
+                    };
+                }
+            } else {
+                return {
+                    statusCode: 406,
+                    message: ['Product does not exist.'],
+                    error: true,
+                };
+            }
+        } catch (error) {
+            throw new HttpException(
+                {
+                    statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+                    message: ['Internal server error.'],
+                    error: true,
+                },
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
         }
     }
 }

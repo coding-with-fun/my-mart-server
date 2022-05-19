@@ -77,25 +77,19 @@ export class UserService {
             };
         } catch (error) {
             if (error.code === 'ER_DUP_ENTRY') {
-                throw new HttpException(
-                    {
-                        statusCode: HttpStatus.NOT_ACCEPTABLE,
-                        message: [
-                            'User with the given email address or contact number already exists.',
-                        ],
-                        error: true,
-                    },
-                    HttpStatus.NOT_ACCEPTABLE,
-                );
+                return {
+                    statusCode: 406,
+                    message: [
+                        'User with the given email address or contact number already exists.',
+                    ],
+                    error: true,
+                };
             } else if (error.code === 'ER_WARN_DATA_OUT_OF_RANGE') {
-                throw new HttpException(
-                    {
-                        statusCode: HttpStatus.NOT_ACCEPTABLE,
-                        message: ['Entry out of range.'],
-                        error: true,
-                    },
-                    HttpStatus.NOT_ACCEPTABLE,
-                );
+                return {
+                    statusCode: 406,
+                    message: ['Entry out of range.'],
+                    error: true,
+                };
             } else {
                 throw new HttpException(
                     {
@@ -122,14 +116,22 @@ export class UserService {
                 },
             });
 
-            delete userDetails.password;
+            if (userDetails) {
+                delete userDetails.password;
 
-            return {
-                statusCode: 200,
-                data: userDetails,
-                message: ['User details fetched.'],
-                error: false,
-            };
+                return {
+                    statusCode: 200,
+                    data: userDetails,
+                    message: ['User details fetched.'],
+                    error: false,
+                };
+            } else {
+                return {
+                    statusCode: 406,
+                    message: ['User not found.'],
+                    error: true,
+                };
+            }
         } catch (error) {
             throw new HttpException(
                 {

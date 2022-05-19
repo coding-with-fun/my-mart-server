@@ -17,14 +17,14 @@ export class getAllUsersResponseType {
 
 export class createUserResponseType {
     statusCode: number;
-    data: User;
+    data?: User;
     message: string[];
     error: boolean;
 }
 
 export class getUserDetailsByIdResponseType {
     statusCode: number;
-    data: User;
+    data?: User;
     message: string[];
     error: boolean;
 }
