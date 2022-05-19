@@ -35,21 +35,8 @@ export class CartService {
                     cart: true,
                 },
             });
+            user.cart.push(product);
 
-            const userProductIndex = _.findIndex(user.cart, ['id', productId]);
-
-            if (userProductIndex > -1) {
-                console.log('PRODUCT >> ', user.cart[userProductIndex].count);
-                user.cart[userProductIndex].count =
-                    user.cart[userProductIndex].count + 1;
-
-                console.log('PRODUCT >> ', user.cart[userProductIndex].count);
-            } else {
-                product.count = 1;
-                user.cart.push(product);
-            }
-
-            console.log(user, userProductIndex);
             return await this.userRepository.save(user);
         }
     }
