@@ -15,13 +15,6 @@ export class getAllUsersResponseType {
     error: boolean;
 }
 
-export class createUserResponseType {
-    statusCode: number;
-    data?: User;
-    message: string[];
-    error: boolean;
-}
-
 export class getUserDetailsByIdResponseType {
     statusCode: number;
     data?: User;

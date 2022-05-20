@@ -1,6 +1,6 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { loginWithCredentialsRequestType } from 'src/types/requests/auth.request';
+import { signInUserRequestType } from 'src/types/requests/auth.request';
 
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor() {
@@ -10,7 +10,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         });
     }
 
-    async validate(payload: loginWithCredentialsRequestType) {
+    async validate(payload: signInUserRequestType) {
         return {
             id: payload.id,
         };

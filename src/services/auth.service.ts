@@ -3,10 +3,14 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import User from 'src/models/user.model';
 import {
-    loginWithCredentialsRequestType,
+    signInUserRequestType,
+    signUpBodyType,
     validateCredentialsRequestType,
 } from 'src/types/requests/auth.request';
-import { createUserBodyType } from 'src/types/requests/user.request';
+import {
+    signInResponseType,
+    signUpResponseType,
+} from 'src/types/responses/auth.response';
 import { Repository } from 'typeorm';
 import {
     encryptPassword,
@@ -53,7 +57,9 @@ export class AuthService {
         }
     }
 
-    async loginWithCredentials(user: loginWithCredentialsRequestType) {
+    async loginWithCredentials(
+        user: signInUserRequestType,
+    ): Promise<signInResponseType> {
         try {
             const payload = {
                 id: user.id,
@@ -64,7 +70,7 @@ export class AuthService {
                 data: {
                     access_token: this.jwtTokenService.sign(payload),
                 },
-                message: ['User logged in successfully.'],
+                message: ['User signed in successfully.'],
                 error: false,
             };
         } catch (error) {
@@ -79,7 +85,7 @@ export class AuthService {
         }
     }
 
-    async signUp(body: createUserBodyType) {
+    async signUp(body: signUpBodyType): Promise<signUpResponseType> {
         try {
             const newUser = new User();
             newUser.firstName = body.firstName;
