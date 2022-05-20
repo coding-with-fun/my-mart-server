@@ -34,21 +34,24 @@ export class AuthService {
                 },
                 select: ['id', 'email', 'password'],
             });
-            const doesPasswordMatch = await matchPassword(
-                params.password,
-                user.password,
-            );
 
-            if (user && doesPasswordMatch) {
-                const { password, ...result } = user;
-                return result;
+            if (user) {
+                const doesPasswordMatch = await matchPassword(
+                    params.password,
+                    user.password,
+                );
+
+                if (doesPasswordMatch) {
+                    const { password, ...result } = user;
+                    return result;
+                }
             }
 
             return null;
         } catch (error) {
             throw new HttpException(
                 {
-                    statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+                    statusCode: 500,
                     message: ['Internal server error.'],
                     error: true,
                 },
@@ -76,7 +79,7 @@ export class AuthService {
         } catch (error) {
             throw new HttpException(
                 {
-                    statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+                    statusCode: 500,
                     message: ['Internal server error.'],
                     error: true,
                 },
@@ -124,7 +127,7 @@ export class AuthService {
             } else {
                 throw new HttpException(
                     {
-                        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+                        statusCode: 500,
                         message: ['Internal server error.'],
                         error: true,
                     },
