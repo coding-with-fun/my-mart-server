@@ -4,7 +4,7 @@ import _ from 'lodash';
 import User from 'src/models/user.model';
 import {
     getAllUsersQueryType,
-    getUserIdRequestType,
+    userIdRequestType,
 } from 'src/types/requests/user.request';
 import { Repository } from 'typeorm';
 import { pagination } from './pagination.service';
@@ -52,7 +52,7 @@ export class UserService {
         }
     }
 
-    async getUserDetailsById(params: getUserIdRequestType) {
+    async getUserDetailsById(params: userIdRequestType) {
         try {
             const userId = parseInt(params.id);
 

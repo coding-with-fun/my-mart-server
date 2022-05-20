@@ -1,5 +1,13 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    OneToMany,
+    OneToOne,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
 import Product from './product.model';
+import User from './user.model';
 
 @Entity('brand')
 export default class Brand {
@@ -15,6 +23,12 @@ export default class Brand {
         length: 50,
     })
     title: string;
+
+    @OneToOne(() => User, (user) => user.id, {
+        onDelete: 'CASCADE',
+    })
+    @JoinColumn()
+    createdBy: User;
 
     @OneToMany(() => Product, (product) => product.brand)
     products: Product[];

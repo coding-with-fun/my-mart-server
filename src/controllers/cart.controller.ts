@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { CartService } from 'src/services/cart.service';
-import { getUserIdRequestType } from 'src/types/requests/user.request';
+import { userRequestType } from 'src/types/requests/user.request';
 
 @Controller('cart')
 export class CartController {
@@ -18,9 +18,7 @@ export class CartController {
     @Get('/get-all')
     getCartItems(
         @Request()
-        req: {
-            user: getUserIdRequestType;
-        },
+        req: userRequestType,
     ) {
         return this.cartService.getCartItems({
             userId: req.user.id,
@@ -31,9 +29,7 @@ export class CartController {
     @Post('/add')
     addProductToCart(
         @Request()
-        req: {
-            user: getUserIdRequestType;
-        },
+        req: userRequestType,
         @Body('productId') productId: string,
     ) {
         return this.cartService.addProductToCart({

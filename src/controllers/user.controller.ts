@@ -3,7 +3,7 @@ import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { UserService } from 'src/services/user.service';
 import {
     getAllUsersQueryType,
-    getUserIdRequestType,
+    userRequestType,
 } from 'src/types/requests/user.request';
 import {
     getAllUsersResponseType,
@@ -18,9 +18,7 @@ export class UserController {
     @Get('/details')
     getUserInfo(
         @Request()
-        req: {
-            user: getUserIdRequestType;
-        },
+        req: userRequestType,
     ): Promise<getUserDetailsByIdResponseType> {
         return this.userService.getUserDetailsById(req.user);
     }
