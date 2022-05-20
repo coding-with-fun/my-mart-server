@@ -19,6 +19,40 @@ export class CartService {
         private cartRepository: Repository<Cart>,
     ) {}
 
+    async getCartItems(params: any) {
+        try {
+            const userId = parseInt(params.userId);
+
+            const cartItems = await this.cartRepository.find({
+                where: {
+                    user: {
+                        id: userId,
+                    },
+                },
+                relations: {
+                    product: true,
+                    user: true,
+                },
+            });
+
+            return {
+                statusCode: 200,
+                data: cartItems,
+                message: ['Fetched all items from the cart.'],
+                error: false,
+            };
+        } catch (error) {
+            throw new HttpException(
+                {
+                    statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+                    message: ['Internal server error.'],
+                    error: true,
+                },
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
+    }
+
     async addProductToCart(params: addProductToCartRequestType) {
         try {
             const userId = parseInt(params.userId);
@@ -144,7 +178,7 @@ export class CartService {
                     return {
                         statusCode: 200,
                         data: cartItem,
-                        message: ['Product does not exist in the cart.'],
+                        message: ['Product updated in the cart.'],
                         error: true,
                     };
                 } else {

@@ -99,6 +99,23 @@ export class ProductService {
         }
     }
 
+    async deleteProduct(params: any) {
+        try {
+            const productId = parseInt(params.productId);
+
+            await this.productRepository.delete(productId);
+        } catch (error) {
+            throw new HttpException(
+                {
+                    statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+                    message: ['Internal server error.'],
+                    error: true,
+                },
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
+    }
+
     async getCurrentProductDetails() {
         return 'Product details fetched.';
     }

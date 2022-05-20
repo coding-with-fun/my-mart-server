@@ -17,10 +17,14 @@ export default class Cart {
     })
     id: number;
 
-    @ManyToOne(() => User, (user) => user.cart)
+    @ManyToOne(() => User, (user) => user.cart, {
+        onDelete: 'CASCADE',
+    })
     user: User;
 
-    @OneToOne(() => Product, (product) => product.id)
+    @OneToOne(() => Product, (product) => product.id, {
+        onDelete: 'CASCADE',
+    })
     @JoinColumn()
     product: Product;
 

@@ -22,6 +22,8 @@ export default class Product {
     })
     price: number;
 
-    @ManyToOne(() => Brand, (brand) => brand.products)
+    @ManyToOne(() => Brand, (brand) => brand.products, {
+        onDelete: 'CASCADE',
+    })
     brand: Brand;
 }
