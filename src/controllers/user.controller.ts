@@ -1,21 +1,11 @@
-import {
-    Body,
-    Controller,
-    Get,
-    Post,
-    Query,
-    Request,
-    UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Query, Request, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { UserService } from 'src/services/user.service';
 import {
-    createUserBodyType,
     getAllUsersQueryType,
     getUserIdRequestType,
 } from 'src/types/requests/user.request';
 import {
-    createUserResponseType,
     getAllUsersResponseType,
     getUserDetailsByIdResponseType,
 } from 'src/types/responses/user.response';
@@ -40,12 +30,5 @@ export class UserController {
         @Query() query: getAllUsersQueryType,
     ): Promise<getAllUsersResponseType> {
         return this.userService.getAllUsers(query);
-    }
-
-    @Post('/add')
-    createUser(
-        @Body() body: createUserBodyType,
-    ): Promise<createUserResponseType> {
-        return this.userService.createUser(body);
     }
 }
