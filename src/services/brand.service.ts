@@ -2,7 +2,11 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import Brand from 'src/models/brand.model';
 import User from 'src/models/user.model';
-import { createBrandParamType } from 'src/types/requests/brand.request';
+import {
+    createBrandParamType,
+    getAllBrandsQueryType,
+    getBrandDetailsParamType,
+} from 'src/types/requests/brand.request';
 import { createBrandResponseType } from 'src/types/responses/brand.response';
 import { Repository } from 'typeorm';
 
@@ -49,6 +53,14 @@ export class BrandService {
                 HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
+    }
+
+    async getBrandDetails(params: getBrandDetailsParamType) {
+        console.log(params);
+    }
+
+    async getAllBrandDetails(query: getAllBrandsQueryType) {
+        console.log(query);
     }
 
     async getCurrentBrandDetails() {

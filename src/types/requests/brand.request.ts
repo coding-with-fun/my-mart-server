@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsString, Length } from 'class-validator';
+import { paginationRequestType } from './pagination.request';
 
 export class createBrandBodyType {
     @IsNotEmpty({
@@ -19,6 +20,22 @@ export class createBrandParamType extends createBrandBodyType {
     })
     userId: string;
 }
+
+export class getBrandDetailsBodyType {
+    @IsNotEmpty({
+        message: 'Brand ID is required.',
+    })
+    brandId: string;
+}
+
+export class getBrandDetailsParamType extends getBrandDetailsBodyType {
+    @IsNotEmpty({
+        message: 'User ID is required.',
+    })
+    userId: string;
+}
+
+export class getAllBrandsQueryType extends paginationRequestType {}
 
 export class updateBrandBodyType {
     @IsNotEmpty({

@@ -4,12 +4,17 @@ import {
     Get,
     Post,
     Put,
+    Query,
     Request,
     UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { BrandService } from 'src/services/brand.service';
-import { createBrandBodyType } from 'src/types/requests/brand.request';
+import {
+    createBrandBodyType,
+    getAllBrandsQueryType,
+    getBrandDetailsBodyType,
+} from 'src/types/requests/brand.request';
 import { userRequestType } from 'src/types/requests/user.request';
 import { createBrandResponseType } from 'src/types/responses/brand.response';
 
@@ -29,6 +34,26 @@ export class BrandController {
             userId: req.user.id,
         };
         return this.brandService.createBrand(params);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('/details')
+    getBrandDetails(
+        @Request()
+        req: userRequestType,
+        @Body() body: getBrandDetailsBodyType,
+    ) {
+        const params = {
+            brandId: body.brandId,
+            userId: req.user.id,
+        };
+        return this.brandService.getBrandDetails(params);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('/all')
+    getAllBrandDetails(@Query() query: getAllBrandsQueryType) {
+        return this.brandService.getAllBrandDetails(query);
     }
 
     @Put('/update')
